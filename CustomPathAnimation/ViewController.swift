@@ -19,8 +19,12 @@ class ViewController: UIViewController {
         view.addSubview(pathView)
     }
 
-    @IBAction func buttonAction(_ sender: UIButton) {
-        pathView.animateShape()
+    @IBAction func backButtonAction(_ sender: UIButton) {
+        pathView.animateShape(isForward: false)
+    }
+    
+    @IBAction func forwardButtonAction(_ sender: UIButton) {
+        pathView.animateShape(isForward: true)
     }
 }
 
