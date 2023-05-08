@@ -23,7 +23,11 @@ class CustomPath: UIView {
     private let duration: TimeInterval = 0.4
     private var delay: TimeInterval
     
-    private let midleAnchorDelta: CGFloat = 70
+    private let minWaveY: CGFloat = 60
+    private let maxWaveY: CGFloat = 80
+    private var midleAnchorDelta: CGFloat {
+        return (minWaveY+maxWaveY)/2
+    }
     
     private let shapeLayer = CAShapeLayer()
 //    private let shapeLayer2 = CAShapeLayer()
@@ -173,11 +177,11 @@ extension CustomPath {
             secondAnchorDelta = currentFrame.height
             midAnchor = currentFrame.height
         case .start:
-            firstAnchorDelta = 80
-            secondAnchorDelta = 60
+            firstAnchorDelta = maxWaveY
+            secondAnchorDelta = minWaveY
         case .finish:
-            firstAnchorDelta = 60
-            secondAnchorDelta = 80
+            firstAnchorDelta = minWaveY
+            secondAnchorDelta = maxWaveY
         }
         
         let path = UIBezierPath()
