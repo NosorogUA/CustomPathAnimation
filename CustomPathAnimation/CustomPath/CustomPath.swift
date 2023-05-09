@@ -15,7 +15,7 @@ class CustomPath: UIView {
     
     private let currentFrame: CGRect
     private let color: UIColor
-    private var currentState: ShapeState = .splash
+    private var currentState: ShapeState = .start// .splash
     
     private let controlDeltaX: CGFloat
     private let controlDeltaY: CGFloat
@@ -69,12 +69,12 @@ class CustomPath: UIView {
 //        shapeLayer2.path = getShape(state: .finish).cgPath
 //        shapeLayer3.path = midPath(isFirst: true).cgPath
 //        shapeLayer4.path = midPath(isFirst: false).cgPath
-        
+//
 //        shapeLayer.fillColor = UIColor(red: 0, green: 0, blue: 1, alpha: 0.5).cgColor
 //        shapeLayer2.fillColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5).cgColor
 //        shapeLayer3.fillColor = UIColor(red: 0, green: 1, blue: 0.5, alpha: 0.5).cgColor
 //        shapeLayer4.fillColor = UIColor(red: 0.5, green: 0, blue: 1, alpha: 0.5).cgColor
-        
+//
 //        self.layer.addSublayer(self.shapeLayer2)
 //        self.layer.addSublayer(self.shapeLayer3)
 //        self.layer.addSublayer(self.shapeLayer4)
