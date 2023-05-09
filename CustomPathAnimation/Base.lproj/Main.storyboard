@@ -38,6 +38,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <connections>
+                        <outlet property="buttonBack" destination="Fj5-K0-3lk" id="KpK-Xc-uFs"/>
+                        <outlet property="buttonForward" destination="1rf-8S-oy6" id="t1K-eO-ZZ9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

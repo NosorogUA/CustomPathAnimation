@@ -64,16 +64,17 @@ class CustomPath: UIView {
         case .finish:
             self.shapeLayer.path = getShape(state: .finish).cgPath
         }
+        shapeLayer.fillColor = color.cgColor
+        self.layer.addSublayer(self.shapeLayer)
 //        shapeLayer2.path = getShape(state: .finish).cgPath
 //        shapeLayer3.path = midPath(isFirst: true).cgPath
 //        shapeLayer4.path = midPath(isFirst: false).cgPath
-        shapeLayer.fillColor = color.cgColor
+        
 //        shapeLayer.fillColor = UIColor(red: 0, green: 0, blue: 1, alpha: 0.5).cgColor
 //        shapeLayer2.fillColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5).cgColor
 //        shapeLayer3.fillColor = UIColor(red: 0, green: 1, blue: 0.5, alpha: 0.5).cgColor
 //        shapeLayer4.fillColor = UIColor(red: 0.5, green: 0, blue: 1, alpha: 0.5).cgColor
         
-        self.layer.addSublayer(self.shapeLayer)
 //        self.layer.addSublayer(self.shapeLayer2)
 //        self.layer.addSublayer(self.shapeLayer3)
 //        self.layer.addSublayer(self.shapeLayer4)
@@ -100,7 +101,7 @@ class CustomPath: UIView {
         var animationDelay: TimeInterval = delay
         switch currentState {
         case .splash:
-            animationDuration = (isForward ? 1.5 : 1.2) - delay
+            animationDuration = (isForward ? 1.3 : 1.0) - delay
             animationDelay = delay + (isForward ? 0.6 : 0.9)
             new = midPath(isFirst: isForward)
             currentState = isForward ? .start : .finish
