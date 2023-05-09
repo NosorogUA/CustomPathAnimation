@@ -30,9 +30,9 @@ class CustomPath: UIView {
     }
     
     private let shapeLayer = CAShapeLayer()
-//    private let shapeLayer2 = CAShapeLayer()
-//    private let shapeLayer3 = CAShapeLayer()
-//    private let shapeLayer4 = CAShapeLayer()
+    private let shapeLayer2 = CAShapeLayer()
+    private let shapeLayer3 = CAShapeLayer()
+    private let shapeLayer4 = CAShapeLayer()
     
     var animationHandler: ((Bool) -> Void)?
     
@@ -66,18 +66,18 @@ class CustomPath: UIView {
         }
         shapeLayer.fillColor = color.cgColor
         self.layer.addSublayer(self.shapeLayer)
-//        shapeLayer2.path = getShape(state: .finish).cgPath
-//        shapeLayer3.path = midPath(isFirst: true).cgPath
-//        shapeLayer4.path = midPath(isFirst: false).cgPath
-//
-//        shapeLayer.fillColor = UIColor(red: 0, green: 0, blue: 1, alpha: 0.5).cgColor
-//        shapeLayer2.fillColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5).cgColor
-//        shapeLayer3.fillColor = UIColor(red: 0, green: 1, blue: 0.5, alpha: 0.5).cgColor
-//        shapeLayer4.fillColor = UIColor(red: 0.5, green: 0, blue: 1, alpha: 0.5).cgColor
-//
-//        self.layer.addSublayer(self.shapeLayer2)
-//        self.layer.addSublayer(self.shapeLayer3)
-//        self.layer.addSublayer(self.shapeLayer4)
+        shapeLayer2.path = getShape(state: .finish).cgPath
+        shapeLayer3.path = midPath(isFirst: true).cgPath
+        shapeLayer4.path = midPath(isFirst: false).cgPath
+
+        shapeLayer.fillColor = UIColor(red: 0, green: 0, blue: 1, alpha: 0.5).cgColor
+        shapeLayer2.fillColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5).cgColor
+        shapeLayer3.fillColor = UIColor(red: 0, green: 1, blue: 0.5, alpha: 0.5).cgColor
+        shapeLayer4.fillColor = UIColor(red: 0.5, green: 0, blue: 1, alpha: 0.5).cgColor
+
+        self.layer.addSublayer(self.shapeLayer2)
+        self.layer.addSublayer(self.shapeLayer3)
+        self.layer.addSublayer(self.shapeLayer4)
     }
     
     func changeShape() {
