@@ -87,7 +87,7 @@ class CustomPath: UIView {
     func animateShape(isForward: Bool) {
         animationHandler?(true)
         var new: UIBezierPath
-        var animationDuration: TimeInterval = 0.0
+        var animationDuration: TimeInterval = mainDuration
         var animationDelay: TimeInterval = 0.0
         
         switch currentState {
