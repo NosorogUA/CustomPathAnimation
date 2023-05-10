@@ -15,7 +15,7 @@ class CustomPath: UIView {
     
     private let currentFrame: CGRect
     private let color: UIColor
-    private var currentState: ShapeState = .start
+    private var currentState: ShapeState = .splash
     
     private let controlDeltaX: CGFloat
     private let controlDeltaY: CGFloat
@@ -33,9 +33,6 @@ class CustomPath: UIView {
     }
     
     private let shapeLayer = CAShapeLayer()
-    private let shapeLayer2 = CAShapeLayer()
-    private let shapeLayer3 = CAShapeLayer()
-    private let shapeLayer4 = CAShapeLayer()
     
     var animationHandler: ((Bool) -> Void)?
     
@@ -61,20 +58,18 @@ class CustomPath: UIView {
     }
     
     private func setup() {
-        self.shapeLayer.path = getShape(state: .start).cgPath
-        self.shapeLayer2.path = getShape(state: .finish).cgPath
-        self.shapeLayer3.path = midPath(isFirst: true).cgPath
-        self.shapeLayer4.path = midPath(isFirst: false).cgPath
-        
-        shapeLayer.fillColor = CGColor(red: 0, green: 0, blue: 1, alpha: 0.5)
-        shapeLayer2.fillColor = CGColor(red: 1, green: 0, blue: 0, alpha: 0.5)
-        shapeLayer3.fillColor = CGColor(red: 0, green: 1, blue: 0, alpha: 0.5)
-        shapeLayer4.fillColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-        
+        switch currentState {
+        case .splash:
+            self.shapeLayer.path = getShape(state: .splash).cgPath
+            
+        case .start:
+            self.shapeLayer.path = getShape(state: .start).cgPath
+            
+        case .finish:
+            self.shapeLayer.path = getShape(state: .finish).cgPath
+        }
+        shapeLayer.fillColor = color.cgColor
         self.layer.addSublayer(self.shapeLayer)
-        self.layer.addSublayer(self.shapeLayer2)
-        self.layer.addSublayer(self.shapeLayer3)
-        self.layer.addSublayer(self.shapeLayer4)
     }
     
     func changeShape() {
