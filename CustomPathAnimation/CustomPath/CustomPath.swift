@@ -13,10 +13,9 @@ enum ShapeState {
 
 class CustomPath: UIView {
     
-    
     private let currentFrame: CGRect
     private let color: UIColor
-    private var currentState: ShapeState = .splash
+    private var currentState: ShapeState = .start
     
     private let controlDeltaX: CGFloat
     private let controlDeltaY: CGFloat
@@ -34,6 +33,9 @@ class CustomPath: UIView {
     }
     
     private let shapeLayer = CAShapeLayer()
+    private let shapeLayer2 = CAShapeLayer()
+    private let shapeLayer3 = CAShapeLayer()
+    private let shapeLayer4 = CAShapeLayer()
     
     var animationHandler: ((Bool) -> Void)?
     
@@ -59,20 +61,20 @@ class CustomPath: UIView {
     }
     
     private func setup() {
-        switch currentState {
-        case .splash:
-            self.shapeLayer.path = getShape(state: .splash).cgPath
-            
-        case .start:
-            self.shapeLayer.path = getShape(state: .start).cgPath
-            
-        case .finish:
-            self.shapeLayer.path = getShape(state: .finish).cgPath
-        }
-        shapeLayer.fillColor = color.cgColor
+        self.shapeLayer.path = getShape(state: .start).cgPath
+        self.shapeLayer2.path = getShape(state: .finish).cgPath
+        self.shapeLayer3.path = midPath(isFirst: true).cgPath
+        self.shapeLayer4.path = midPath(isFirst: false).cgPath
+        
+        shapeLayer.fillColor = CGColor(red: 0, green: 0, blue: 1, alpha: 0.5)
+        shapeLayer2.fillColor = CGColor(red: 1, green: 0, blue: 0, alpha: 0.5)
+        shapeLayer3.fillColor = CGColor(red: 0, green: 1, blue: 0, alpha: 0.5)
+        shapeLayer4.fillColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        
         self.layer.addSublayer(self.shapeLayer)
-        
-        
+        self.layer.addSublayer(self.shapeLayer2)
+        self.layer.addSublayer(self.shapeLayer3)
+        self.layer.addSublayer(self.shapeLayer4)
     }
     
     func changeShape() {
@@ -161,13 +163,13 @@ extension CustomPath: CAAnimationDelegate {
 }
 // MARK: Custom Shapes
 extension CustomPath {
-
+    
     private func getShape(state: ShapeState) -> UIBezierPath {
         var firstAnchorDelta: CGFloat
         var secondAnchorDelta: CGFloat
         var midAnchor: CGFloat = midleAnchorDelta
         
-        switch currentState {
+        switch state {
         case .splash:
             firstAnchorDelta = currentFrame.height
             secondAnchorDelta = currentFrame.height
@@ -183,32 +185,42 @@ extension CustomPath {
         let path = UIBezierPath()
         
         // wave points from right to left
-        let point1: CGPoint =  CGPoint(x: currentFrame.maxX,
-                                       y: currentFrame.minY+midAnchor)
-        let point2: CGPoint =  CGPoint(x: currentFrame.maxX - step,
-                                       y: currentFrame.minY+firstAnchorDelta)
-        let point3: CGPoint =  CGPoint(x: currentFrame.maxX - step*2,
-                                       y: currentFrame.minY+secondAnchorDelta)
-        let point4: CGPoint =  CGPoint(x: currentFrame.maxX - step*3,
-                                       y: currentFrame.minY+firstAnchorDelta)
-        let point5: CGPoint =  CGPoint(x: currentFrame.maxX - step*4,
-                                       y: currentFrame.minY+secondAnchorDelta)
+        let point1: CGPoint = CGPoint(x: currentFrame.maxX,
+                                      y: currentFrame.minY+midAnchor)
+        let point2: CGPoint = CGPoint(x: currentFrame.maxX - step,
+                                      y: currentFrame.minY+firstAnchorDelta)
+        let point3: CGPoint = CGPoint(x: currentFrame.maxX - step*2,
+                                      y: currentFrame.minY+secondAnchorDelta)
+        let point4: CGPoint = CGPoint(x: currentFrame.maxX - step*3,
+                                      y: currentFrame.minY+firstAnchorDelta)
+        let point5: CGPoint = CGPoint(x: currentFrame.maxX - step*4,
+                                      y: currentFrame.minY+secondAnchorDelta)
         
-        path.move(to: CGPoint(x: currentFrame.minX, y: currentFrame.minY))
-        path.addLine(to: CGPoint(x: currentFrame.maxX, y: currentFrame.minY))
+        path.move(to: CGPoint(x: currentFrame.minX,
+                              y: currentFrame.minY))
+        path.addLine(to: CGPoint(x: currentFrame.maxX,
+                                 y: currentFrame.minY))
         path.addLine(to: point1)
         path.addCurve(to: point2,
-                      controlPoint1: CGPoint(x: point1.x-controlDeltaX, y: point1.y),
-                      controlPoint2: CGPoint(x: point2.x+controlDeltaX, y: point2.y))
+                      controlPoint1: CGPoint(x: point1.x-controlDeltaX,
+                                             y: point1.y),
+                      controlPoint2: CGPoint(x: point2.x+controlDeltaX,
+                                             y: point2.y))
         path.addCurve(to: point3,
-                      controlPoint1: CGPoint(x: point2.x-controlDeltaX, y: point2.y),
-                      controlPoint2: CGPoint(x: point3.x+controlDeltaX, y: point3.y))
+                      controlPoint1: CGPoint(x: point2.x-controlDeltaX,
+                                             y: point2.y),
+                      controlPoint2: CGPoint(x: point3.x+controlDeltaX,
+                                             y: point3.y))
         path.addCurve(to: point4,
-                      controlPoint1: CGPoint(x: point3.x-controlDeltaX, y: point3.y),
-                      controlPoint2: CGPoint(x: point4.x+controlDeltaX, y: point4.y))
+                      controlPoint1: CGPoint(x: point3.x-controlDeltaX,
+                                             y: point3.y),
+                      controlPoint2: CGPoint(x: point4.x+controlDeltaX,
+                                             y: point4.y))
         path.addCurve(to: point5,
-                      controlPoint1: CGPoint(x: point4.x-controlDeltaX, y: point4.y),
-                      controlPoint2: CGPoint(x: point5.x+controlDeltaX, y: point5.y))
+                      controlPoint1: CGPoint(x: point4.x-controlDeltaX,
+                                             y: point4.y),
+                      controlPoint2: CGPoint(x: point5.x+controlDeltaX,
+                                             y: point5.y))
         return path
     }
     
@@ -225,36 +237,54 @@ extension CustomPath {
                                        y: currentFrame.minY+midleAnchorDelta)
         let point5: CGPoint =  CGPoint(x: currentFrame.maxX - step*4,
                                        y: currentFrame.minY+midleAnchorDelta)
-        path.move(to: CGPoint(x: currentFrame.minX, y: currentFrame.minY))
-        path.addLine(to: CGPoint(x: currentFrame.maxX, y: currentFrame.minY))
+        path.move(to: CGPoint(x: currentFrame.minX,
+                              y: currentFrame.minY))
+        path.addLine(to: CGPoint(x: currentFrame.maxX,
+                                 y: currentFrame.minY))
         path.addLine(to: point1)
         
         if isFirst {
             path.addCurve(to: point2,
-                          controlPoint1: CGPoint(x: point1.x, y: point1.y),
-                          controlPoint2: CGPoint(x: point2.x+controlDeltaX, y: point2.y+controlDeltaY))
+                          controlPoint1: CGPoint(x: point1.x,
+                                                 y: point1.y),
+                          controlPoint2: CGPoint(x: point2.x+controlDeltaX,
+                                                 y: point2.y+controlDeltaY))
             path.addCurve(to: point3,
-                          controlPoint1: CGPoint(x: point2.x-controlDeltaX, y: point2.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point3.x+controlDeltaX, y: point3.y-controlDeltaY))
+                          controlPoint1: CGPoint(x: point2.x-controlDeltaX,
+                                                 y: point2.y-controlDeltaY),
+                          controlPoint2: CGPoint(x: point3.x+controlDeltaX,
+                                                 y: point3.y-controlDeltaY))
             path.addCurve(to: point4,
-                          controlPoint1: CGPoint(x: point3.x-controlDeltaX, y: point3.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point4.x+controlDeltaX, y: point4.y+controlDeltaY))
+                          controlPoint1: CGPoint(x: point3.x-controlDeltaX,
+                                                 y: point3.y+controlDeltaY),
+                          controlPoint2: CGPoint(x: point4.x+controlDeltaX,
+                                                 y: point4.y+controlDeltaY))
             path.addCurve(to: point5,
-                          controlPoint1: CGPoint(x: point4.x-controlDeltaX, y: point4.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point5.x+controlDeltaX, y: point5.y))
+                          controlPoint1: CGPoint(x: point4.x-controlDeltaX,
+                                                 y: point4.y-controlDeltaY),
+                          controlPoint2: CGPoint(x: point5.x+controlDeltaX,
+                                                 y: point5.y))
         } else {
             path.addCurve(to: point2,
-                          controlPoint1: CGPoint(x: point1.x-controlDeltaX, y: point1.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point2.x+controlDeltaX, y: point2.y-controlDeltaY))
+                          controlPoint1: CGPoint(x: point1.x-controlDeltaX,
+                                                 y: point1.y-controlDeltaY),
+                          controlPoint2: CGPoint(x: point2.x+controlDeltaX,
+                                                 y: point2.y-controlDeltaY))
             path.addCurve(to: point3,
-                          controlPoint1: CGPoint(x: point2.x-controlDeltaX, y: point2.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point3.x+controlDeltaX, y: point3.y+controlDeltaY))
+                          controlPoint1: CGPoint(x: point2.x-controlDeltaX,
+                                                 y: point2.y+controlDeltaY),
+                          controlPoint2: CGPoint(x: point3.x+controlDeltaX,
+                                                 y: point3.y+controlDeltaY))
             path.addCurve(to: point4,
-                          controlPoint1: CGPoint(x: point3.x-controlDeltaX, y: point3.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point4.x+controlDeltaX, y: point4.y-controlDeltaY))
+                          controlPoint1: CGPoint(x: point3.x-controlDeltaX,
+                                                 y: point3.y-controlDeltaY),
+                          controlPoint2: CGPoint(x: point4.x+controlDeltaX,
+                                                 y: point4.y-controlDeltaY))
             path.addCurve(to: point5,
-                          controlPoint1: CGPoint(x: point4.x-controlDeltaX, y: point4.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point5.x+controlDeltaX, y: point5.y+controlDeltaY))
+                          controlPoint1: CGPoint(x: point4.x-controlDeltaX,
+                                                 y: point4.y+controlDeltaY),
+                          controlPoint2: CGPoint(x: point5.x+controlDeltaX,
+                                                 y: point5.y+controlDeltaY))
         }
         
         return path
