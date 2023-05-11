@@ -7,31 +7,21 @@
 
 import UIKit
 
-enum ShapeState {
-    case splash, start, finish
-}
-
 class CustomPath: UIView {
     
     private let currentFrame: CGRect
     private let color: UIColor
     private var currentState: ShapeState = .splash
     
-    private let controlDeltaX: CGFloat
-    private let controlDeltaY: CGFloat
-    private let step: CGFloat
+    private let stepCounter: CGFloat = 4
+    private let waveHeightDelta: CGFloat = 20
+    
     private let mainDuration: TimeInterval = 0.4
     private let duration: TimeInterval
     private var delay: TimeInterval
     
     private let maxWaveY: CGFloat
-    private var minWaveY: CGFloat {
-        return maxWaveY - 20
-    }
-    private var midleAnchorDelta: CGFloat {
-        return (minWaveY + maxWaveY) / 2
-    }
-    
+   
     private let shapeLayer = CAShapeLayer()
     
     var animationHandler: ((Bool) -> Void)?
@@ -42,9 +32,6 @@ class CustomPath: UIView {
         self.color = color
         self.delay = delay
         self.duration = duration
-        step = currentFrame.width / 4
-        controlDeltaX = currentFrame.width / 10
-        controlDeltaY = currentFrame.width / 50
         super.init(frame: frame)
         setup()
     }
@@ -60,13 +47,23 @@ class CustomPath: UIView {
     private func setup() {
         switch currentState {
         case .splash:
-            self.shapeLayer.path = getShape(state: .splash).cgPath
-            
+            self.shapeLayer.path = FlashAnimationState()
+                .getMainShape(frame: currentFrame,
+                              maxY: maxWaveY,
+                              stepCounter: stepCounter,
+                              waveDelta: waveHeightDelta).cgPath
         case .start:
-            self.shapeLayer.path = getShape(state: .start).cgPath
-            
+            self.shapeLayer.path = FirstAnimationState()
+                .getMainShape(frame: currentFrame,
+                              maxY: maxWaveY,
+                              stepCounter: stepCounter,
+                              waveDelta: waveHeightDelta).cgPath
         case .finish:
-            self.shapeLayer.path = getShape(state: .finish).cgPath
+            self.shapeLayer.path = SecondAnimationState()
+                .getMainShape(frame: currentFrame,
+                              maxY: maxWaveY,
+                              stepCounter: stepCounter,
+                              waveDelta: waveHeightDelta).cgPath
         }
         shapeLayer.fillColor = color.cgColor
         self.layer.addSublayer(self.shapeLayer)
@@ -75,11 +72,24 @@ class CustomPath: UIView {
     func changeShape() {
         switch currentState {
         case .splash:
-            self.shapeLayer.path = getShape(state: .splash).cgPath
+            self.shapeLayer.path = FlashAnimationState()
+                .getMainShape(frame: currentFrame,
+                              maxY: maxWaveY,
+                              stepCounter: stepCounter,
+                              waveDelta: waveHeightDelta).cgPath
         case .start:
-            self.shapeLayer.path = getShape(state: .start).cgPath
-        case .finish:
-            self.shapeLayer.path = getShape(state: .finish).cgPath
+            self.shapeLayer.path = FirstAnimationState()
+                .getMainShape(frame: currentFrame,
+                              maxY: maxWaveY,
+                              stepCounter: stepCounter,
+                              waveDelta: waveHeightDelta).cgPath
+        case .finish: /////////
+            let state = SecondAnimationState()
+            let path = state.getMainShape(frame: currentFrame,
+                                          maxY: maxWaveY,
+                                          stepCounter: stepCounter,
+                                          waveDelta: waveHeightDelta).cgPath
+            self.shapeLayer.path = path
         }
         animationHandler?(false)
     }
@@ -94,15 +104,33 @@ class CustomPath: UIView {
         case .splash:
             animationDuration = duration
             animationDelay = delay
-            new = midPath(isFirst: isForward)
+            let pathState: TransitionPathState = isForward ? .mid1 : .mid2
+            new = FlashAnimationState()
+                .midTransitionPath(state: pathState,
+                                   frame: currentFrame,
+                                   maxY: maxWaveY,
+                                   stepCounter: stepCounter,
+                                   waveDelta: waveHeightDelta)
             currentState = isForward ? .start : .finish
             
         case .start:
-            new = midPath(isFirst: isForward)
+            let pathState: TransitionPathState = isForward ? .mid1 : .mid2
+            new = FirstAnimationState()
+                .midTransitionPath(state: pathState,
+                                   frame: currentFrame,
+                                   maxY: maxWaveY,
+                                   stepCounter: stepCounter,
+                                   waveDelta: waveHeightDelta)
             currentState = .finish
             
         case .finish:
-            new = midPath(isFirst: !isForward)
+            let pathState: TransitionPathState = isForward ? .mid2 : .mid1
+            new = FirstAnimationState()
+                .midTransitionPath(state: pathState,
+                                   frame: currentFrame,
+                                   maxY: maxWaveY,
+                                   stepCounter: stepCounter,
+                                   waveDelta: waveHeightDelta)
             currentState = .start
         }
         
@@ -129,12 +157,10 @@ class CustomPath: UIView {
     private func finishAnimation() {
         var new: UIBezierPath
         switch currentState {
-        case .start:
-            new = getShape(state: .start)
+        case .start, .splash:
+            new = FirstAnimationState().getMainShape(frame: currentFrame, maxY: maxWaveY, stepCounter: stepCounter, waveDelta: waveHeightDelta)
         case .finish:
-            new = getShape(state: .finish)
-        case .splash:
-            new = getShape(state: .start)
+            new = SecondAnimationState().getMainShape(frame: currentFrame, maxY: maxWaveY, stepCounter: stepCounter, waveDelta: waveHeightDelta)
         }
         
         let animation = CABasicAnimation(keyPath: "path")
@@ -159,129 +185,5 @@ extension CustomPath: CAAnimationDelegate {
 // MARK: Custom Shapes
 extension CustomPath {
     
-    private func getShape(state: ShapeState) -> UIBezierPath {
-        var firstAnchorDelta: CGFloat
-        var secondAnchorDelta: CGFloat
-        var midAnchor: CGFloat = midleAnchorDelta
-        
-        switch state {
-        case .splash:
-            firstAnchorDelta = currentFrame.height
-            secondAnchorDelta = currentFrame.height
-            midAnchor = currentFrame.height
-        case .start:
-            firstAnchorDelta = maxWaveY
-            secondAnchorDelta = minWaveY
-        case .finish:
-            firstAnchorDelta = minWaveY
-            secondAnchorDelta = maxWaveY
-        }
-        
-        let path = UIBezierPath()
-        
-        // wave points from right to left
-        let point1: CGPoint = CGPoint(x: currentFrame.maxX,
-                                      y: currentFrame.minY+midAnchor)
-        let point2: CGPoint = CGPoint(x: currentFrame.maxX - step,
-                                      y: currentFrame.minY+firstAnchorDelta)
-        let point3: CGPoint = CGPoint(x: currentFrame.maxX - step*2,
-                                      y: currentFrame.minY+secondAnchorDelta)
-        let point4: CGPoint = CGPoint(x: currentFrame.maxX - step*3,
-                                      y: currentFrame.minY+firstAnchorDelta)
-        let point5: CGPoint = CGPoint(x: currentFrame.maxX - step*4,
-                                      y: currentFrame.minY+secondAnchorDelta)
-        
-        path.move(to: CGPoint(x: currentFrame.minX,
-                              y: currentFrame.minY))
-        path.addLine(to: CGPoint(x: currentFrame.maxX,
-                                 y: currentFrame.minY))
-        path.addLine(to: point1)
-        path.addCurve(to: point2,
-                      controlPoint1: CGPoint(x: point1.x-controlDeltaX,
-                                             y: point1.y),
-                      controlPoint2: CGPoint(x: point2.x+controlDeltaX,
-                                             y: point2.y))
-        path.addCurve(to: point3,
-                      controlPoint1: CGPoint(x: point2.x-controlDeltaX,
-                                             y: point2.y),
-                      controlPoint2: CGPoint(x: point3.x+controlDeltaX,
-                                             y: point3.y))
-        path.addCurve(to: point4,
-                      controlPoint1: CGPoint(x: point3.x-controlDeltaX,
-                                             y: point3.y),
-                      controlPoint2: CGPoint(x: point4.x+controlDeltaX,
-                                             y: point4.y))
-        path.addCurve(to: point5,
-                      controlPoint1: CGPoint(x: point4.x-controlDeltaX,
-                                             y: point4.y),
-                      controlPoint2: CGPoint(x: point5.x+controlDeltaX,
-                                             y: point5.y))
-        return path
-    }
-    
-    private func midPath(isFirst: Bool) -> UIBezierPath {
-        let path = UIBezierPath()
-        // wave points from right to left
-        let point1: CGPoint =  CGPoint(x: currentFrame.maxX,
-                                       y: currentFrame.minY+midleAnchorDelta)
-        let point2: CGPoint =  CGPoint(x: currentFrame.maxX - step,
-                                       y: currentFrame.minY+midleAnchorDelta)
-        let point3: CGPoint =  CGPoint(x: currentFrame.maxX - step*2,
-                                       y: currentFrame.minY+midleAnchorDelta)
-        let point4: CGPoint =  CGPoint(x: currentFrame.maxX - step*3,
-                                       y: currentFrame.minY+midleAnchorDelta)
-        let point5: CGPoint =  CGPoint(x: currentFrame.maxX - step*4,
-                                       y: currentFrame.minY+midleAnchorDelta)
-        path.move(to: CGPoint(x: currentFrame.minX,
-                              y: currentFrame.minY))
-        path.addLine(to: CGPoint(x: currentFrame.maxX,
-                                 y: currentFrame.minY))
-        path.addLine(to: point1)
-        
-        if isFirst {
-            path.addCurve(to: point2,
-                          controlPoint1: CGPoint(x: point1.x,
-                                                 y: point1.y),
-                          controlPoint2: CGPoint(x: point2.x+controlDeltaX,
-                                                 y: point2.y+controlDeltaY))
-            path.addCurve(to: point3,
-                          controlPoint1: CGPoint(x: point2.x-controlDeltaX,
-                                                 y: point2.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point3.x+controlDeltaX,
-                                                 y: point3.y-controlDeltaY))
-            path.addCurve(to: point4,
-                          controlPoint1: CGPoint(x: point3.x-controlDeltaX,
-                                                 y: point3.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point4.x+controlDeltaX,
-                                                 y: point4.y+controlDeltaY))
-            path.addCurve(to: point5,
-                          controlPoint1: CGPoint(x: point4.x-controlDeltaX,
-                                                 y: point4.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point5.x+controlDeltaX,
-                                                 y: point5.y))
-        } else {
-            path.addCurve(to: point2,
-                          controlPoint1: CGPoint(x: point1.x-controlDeltaX,
-                                                 y: point1.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point2.x+controlDeltaX,
-                                                 y: point2.y-controlDeltaY))
-            path.addCurve(to: point3,
-                          controlPoint1: CGPoint(x: point2.x-controlDeltaX,
-                                                 y: point2.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point3.x+controlDeltaX,
-                                                 y: point3.y+controlDeltaY))
-            path.addCurve(to: point4,
-                          controlPoint1: CGPoint(x: point3.x-controlDeltaX,
-                                                 y: point3.y-controlDeltaY),
-                          controlPoint2: CGPoint(x: point4.x+controlDeltaX,
-                                                 y: point4.y-controlDeltaY))
-            path.addCurve(to: point5,
-                          controlPoint1: CGPoint(x: point4.x-controlDeltaX,
-                                                 y: point4.y+controlDeltaY),
-                          controlPoint2: CGPoint(x: point5.x+controlDeltaX,
-                                                 y: point5.y+controlDeltaY))
-        }
-        
-        return path
-    }
+   
 }

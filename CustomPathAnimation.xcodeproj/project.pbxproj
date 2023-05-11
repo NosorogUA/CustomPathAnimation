@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04DA09E52A0BC93200DED8C7 /* WaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA09E42A0BC93200DED8C7 /* WaveState.swift */; };
+		04DA09E72A0BC97B00DED8C7 /* FlashAnimationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA09E62A0BC97B00DED8C7 /* FlashAnimationState.swift */; };
+		04DA09E92A0BC9B700DED8C7 /* FirstAnimationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA09E82A0BC9B700DED8C7 /* FirstAnimationState.swift */; };
+		04DA09EB2A0BC9D400DED8C7 /* SecondAnimationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA09EA2A0BC9D400DED8C7 /* SecondAnimationState.swift */; };
+		04DA09EF2A0BD29300DED8C7 /* PathFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DA09EE2A0BD29300DED8C7 /* PathFactory.swift */; };
 		04F0B4952A03AD6A00BA9158 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0B4942A03AD6A00BA9158 /* AppDelegate.swift */; };
 		04F0B4972A03AD6A00BA9158 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0B4962A03AD6A00BA9158 /* SceneDelegate.swift */; };
 		04F0B4992A03AD6A00BA9158 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F0B4982A03AD6A00BA9158 /* ViewController.swift */; };
@@ -17,6 +22,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04DA09E42A0BC93200DED8C7 /* WaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveState.swift; sourceTree = "<group>"; };
+		04DA09E62A0BC97B00DED8C7 /* FlashAnimationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashAnimationState.swift; sourceTree = "<group>"; };
+		04DA09E82A0BC9B700DED8C7 /* FirstAnimationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstAnimationState.swift; sourceTree = "<group>"; };
+		04DA09EA2A0BC9D400DED8C7 /* SecondAnimationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondAnimationState.swift; sourceTree = "<group>"; };
+		04DA09EE2A0BD29300DED8C7 /* PathFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathFactory.swift; sourceTree = "<group>"; };
 		04F0B4912A03AD6A00BA9158 /* CustomPathAnimation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomPathAnimation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F0B4942A03AD6A00BA9158 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04F0B4962A03AD6A00BA9158 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +49,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04DA09E32A0BC90C00DED8C7 /* WaveStateMashine */ = {
+			isa = PBXGroup;
+			children = (
+				04DA09E42A0BC93200DED8C7 /* WaveState.swift */,
+				04DA09E62A0BC97B00DED8C7 /* FlashAnimationState.swift */,
+				04DA09E82A0BC9B700DED8C7 /* FirstAnimationState.swift */,
+				04DA09EA2A0BC9D400DED8C7 /* SecondAnimationState.swift */,
+			);
+			path = WaveStateMashine;
+			sourceTree = "<group>";
+		};
 		04F0B4882A03AD6A00BA9158 = {
 			isa = PBXGroup;
 			children = (
@@ -73,7 +94,9 @@
 		04F0B4AA2A03B03200BA9158 /* CustomPath */ = {
 			isa = PBXGroup;
 			children = (
+				04DA09E32A0BC90C00DED8C7 /* WaveStateMashine */,
 				04F0B4A82A03AE5200BA9158 /* CustomPath.swift */,
+				04DA09EE2A0BD29300DED8C7 /* PathFactory.swift */,
 			);
 			path = CustomPath;
 			sourceTree = "<group>";
@@ -150,7 +173,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F0B4992A03AD6A00BA9158 /* ViewController.swift in Sources */,
+				04DA09E72A0BC97B00DED8C7 /* FlashAnimationState.swift in Sources */,
+				04DA09EB2A0BC9D400DED8C7 /* SecondAnimationState.swift in Sources */,
+				04DA09EF2A0BD29300DED8C7 /* PathFactory.swift in Sources */,
 				04F0B4952A03AD6A00BA9158 /* AppDelegate.swift in Sources */,
+				04DA09E52A0BC93200DED8C7 /* WaveState.swift in Sources */,
+				04DA09E92A0BC9B700DED8C7 /* FirstAnimationState.swift in Sources */,
 				04F0B4972A03AD6A00BA9158 /* SceneDelegate.swift in Sources */,
 				04F0B4A92A03AE5200BA9158 /* CustomPath.swift in Sources */,
 			);
