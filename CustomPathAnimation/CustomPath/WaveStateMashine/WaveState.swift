@@ -7,34 +7,23 @@
 
 import UIKit
 
-enum ShapeState {
-    case splash, start, finish
-}
-
 protocol WaveState {
-    func getMainShape(frame: CGRect,
-                      maxY: CGFloat,
-                      stepCounter: CGFloat,
-                      waveDelta: CGFloat) -> UIBezierPath
+    func getMainShape(initEntity: StateInitEntity) -> UIBezierPath
     
-    func midTransitionPath(state: TransitionPathState,
-                           frame: CGRect,
-                           maxY: CGFloat,
-                           stepCounter: CGFloat,
-                           waveDelta: CGFloat) -> UIBezierPath
+    func midTransitionPath(state: TransitionPathState, initEntity: StateInitEntity) -> UIBezierPath
 }
 
 extension WaveState {
-    func midTransitionPath(state: TransitionPathState, frame: CGRect, maxY: CGFloat, stepCounter: CGFloat, waveDelta: CGFloat) -> UIBezierPath {
-        let step: CGFloat = frame.width / stepCounter
-        let controlDeltaX: CGFloat = frame.width / 10
-        let controlDeltaY: CGFloat = frame.width / 50
-        let maxY = maxY
-        let minY = maxY - waveDelta
+    func midTransitionPath(state: TransitionPathState, initEntity: StateInitEntity) -> UIBezierPath {
+        let step: CGFloat = initEntity.frame.width / initEntity.stepCounter
+        let controlDeltaX: CGFloat = initEntity.frame.width / 10
+        let controlDeltaY: CGFloat = initEntity.frame.width / 50
+        let maxY = initEntity.maxY
+        let minY = initEntity.maxY - initEntity.waveDelta
         let midAnchor = (maxY + minY) / 2
         
         let entity = TransitionPathEntity(state: state,
-                                          frame: frame,
+                                          frame: initEntity.frame,
                                           step: step,
                                           firstAnchorDelta: maxY,
                                           secondAnchorDelta: minY,
@@ -42,6 +31,6 @@ extension WaveState {
                                           controlDeltaY: controlDeltaY,
                                           midleAnchor: midAnchor)
         
-        return PathFactory.shared.getTransitionPath(pathEntity: entity)
+        return initEntity.pathFactory.getTransitionPath(pathEntity: entity)
     }
 }

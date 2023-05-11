@@ -11,27 +11,6 @@ enum TransitionPathState {
     case mid1, mid2
 }
 
-struct MainPathEntity {
-    let frame: CGRect
-    let step: CGFloat
-    let firstAnchorDelta: CGFloat
-    let secondAnchorDelta: CGFloat
-    let midleAnchor: CGFloat
-    let controlDeltaX: CGFloat
-}
-
-struct TransitionPathEntity {
-    let state: TransitionPathState
-    let frame: CGRect
-    let step: CGFloat
-    let firstAnchorDelta: CGFloat
-    let secondAnchorDelta: CGFloat
-    let controlDeltaX: CGFloat
-    let controlDeltaY: CGFloat
-    let midleAnchor: CGFloat
-}
-
-
 struct PathFactory {
     static let shared = PathFactory()
     

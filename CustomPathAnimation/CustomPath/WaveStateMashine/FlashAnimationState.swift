@@ -9,20 +9,20 @@ import UIKit
 
 class FlashAnimationState: WaveState {
     
-    func getMainShape(frame: CGRect, maxY: CGFloat, stepCounter: CGFloat, waveDelta: CGFloat) -> UIBezierPath {
-        let step: CGFloat = frame.width / stepCounter
-        let maxY = frame.height
-        let minY = frame.height
-        let midAnchor: CGFloat = frame.height
-        let controlDeltaX: CGFloat = frame.width / 10
+    func getMainShape(initEntity: StateInitEntity) -> UIBezierPath {
+        let step: CGFloat = initEntity.frame.width / initEntity.stepCounter
+        let maxY = initEntity.frame.height
+        let minY = initEntity.frame.height
+        let midAnchor: CGFloat = initEntity.frame.height
+        let controlDeltaX: CGFloat = initEntity.frame.width / 10
         
-        let entity = MainPathEntity(frame: frame,
+        let entity = MainPathEntity(frame: initEntity.frame,
                                     step: step,
                                     firstAnchorDelta: maxY,
                                     secondAnchorDelta: minY,
                                     midleAnchor: midAnchor,
                                     controlDeltaX: controlDeltaX)
         
-        return PathFactory.shared.getMainShape(entity)
+        return initEntity.pathFactory.getMainShape(entity)
     }
 }
